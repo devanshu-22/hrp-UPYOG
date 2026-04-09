@@ -148,7 +148,7 @@ export const logout = () => {
           const domain = parsedURL.hostname; // e.g., dev-hrupyog.sparrowsoftech.in
           const protocol = parsedURL.protocol; 
           const clearTokenURL = `${protocol}//${domain}/services/EGF/rest/logout`;  // Construct the final logout URL
-          alert(clearTokenURL); // For debugging purposes
+          //alert(clearTokenURL); // For debugging purposes
           const payload = {
             RequestInfo: {
               apiId: null,
