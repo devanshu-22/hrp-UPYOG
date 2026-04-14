@@ -394,11 +394,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
     
     
-    private boolean isCryptoJsEncrypted(String value) {
-        return value != null && value.startsWith("U2FsdGVkX1");
-    }
-    
-
     private String getClientIp(HttpServletRequest request) {
         // Try the constant you already have defined first
         String ipAddress = request.getHeader(IP_HEADER_NAME); 
