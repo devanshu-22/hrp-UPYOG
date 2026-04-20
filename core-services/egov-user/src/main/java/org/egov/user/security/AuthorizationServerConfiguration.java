@@ -71,50 +71,18 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		return new JedisConnectionFactory(new JedisShardInfo(host));
 	}
 
-//    @Bean
-//    public DefaultTokenServices customTokenServices() {
-//        DefaultTokenServices tokenServices = new DefaultTokenServices();
-//        tokenServices.setTokenEnhancer(customTokenEnhancer);
-//        tokenServices.setTokenStore(tokenStore);
-//        tokenServices.setSupportRefreshToken(true);
-//        tokenServices.setReuseRefreshToken(true);
-//        tokenServices.setAuthenticationManager(customAuthenticationManager);
-//        tokenServices.setClientDetailsService(clientDetailsService);
-//        return tokenServices;
-//    }
+    @Bean
+    public DefaultTokenServices customTokenServices() {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenEnhancer(customTokenEnhancer);
+        tokenServices.setTokenStore(tokenStore);
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setReuseRefreshToken(true);
+        tokenServices.setAuthenticationManager(customAuthenticationManager);
+        tokenServices.setClientDetailsService(clientDetailsService);
+        return tokenServices;
+    }
 	
-	@Bean
-	public DefaultTokenServices customTokenServices() {
-	    return new DefaultTokenServices() {
-
-	        @Override
-	        public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) {
-
-	            OAuth2AccessToken token = super.createAccessToken(authentication);
-
-	            HttpServletResponse response =
-	                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-
-	            boolean isSecure = true; // 👉 change to false for localhost testing
-
-	            // 🔐 Access Token Cookie
-	            response.addHeader("Set-Cookie",
-	                "accessToken=" + token.getValue() +
-	                "; HttpOnly; Path=/; SameSite=Strict" +
-	                (isSecure ? "; Secure" : "") +
-	                "; Max-Age=" + (accessTokenValidityInMinutes * 60));
-
-	            // 🔐 Refresh Token Cookie
-	            response.addHeader("Set-Cookie",
-	                "refreshToken=" + token.getRefreshToken().getValue() +
-	                "; HttpOnly; Path=/; SameSite=Strict" +
-	                (isSecure ? "; Secure" : "") +
-	                "; Max-Age=" + (refreshTokenValidityInMinutes * 60));
-
-	            return token;
-	        }
-	    };
-	}
-
+	
 	
 }
