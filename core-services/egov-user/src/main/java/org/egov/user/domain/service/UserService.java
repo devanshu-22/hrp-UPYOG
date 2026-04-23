@@ -123,6 +123,8 @@ public class UserService {
 
     }
     
+    private static final SecureRandom secureRandom = new SecureRandom();
+
     /**
      * get user By UserName And TenantId
      *
@@ -326,6 +328,9 @@ public class UserService {
             map.add("tenantId", user.getTenantId());
             map.add("isInternal", "true");
             map.add("userType", UserType.CITIZEN.name());
+            String csrfToken = generateCsrfToken();
+            headers.set("X-XSRF-TOKEN", csrfToken);
+            map.add("_csrf", csrfToken);
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map,
                     headers);
@@ -337,6 +342,18 @@ public class UserService {
         }
     }
     
+    
+    public static String generateCsrfToken() {
+        byte[] bytes = new byte[16]; // 128-bit token
+        secureRandom.nextBytes(bytes);
+
+        StringBuilder token = new StringBuilder();
+        for (byte b : bytes) {
+            token.append(String.format("%02x", b));
+        }
+        return token.toString();
+    }
+
     /**
      * dependent on otpValidationMandatory filed,it will validate the otp.
      *
