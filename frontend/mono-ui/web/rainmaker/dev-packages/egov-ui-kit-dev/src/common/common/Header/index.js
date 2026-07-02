@@ -182,7 +182,7 @@ class Header extends Component {
     const localeData = JSON.parse(sessionStorage.getItem("Digit.Employee.zone") || "{}");
     const zoneName = localeData && localeData.value ? localeData.value : "";
     const ulbLogo =
-      currentCity.length > 0 ? get(currentCity[0], "logoId") : "https://hrupyog-dev-finance.s3.ap-south-1.amazonaws.com/Haryana-logo.jpeg";
+      currentCity.length > 0 ? get(currentCity[0], "logoId") : "https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/Haryanalogo.jpeg";
     return (
       <div style={headerStyle}>
         <AppBar

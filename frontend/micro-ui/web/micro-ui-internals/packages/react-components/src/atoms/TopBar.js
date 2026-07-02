@@ -60,7 +60,7 @@ const TopBar = ({
           <img
           className="city"
           id="topbar-logo" 
-          src={"https://hrupyog-dev-finance.s3.ap-south-1.amazonaws.com/MCG+LOGO.jpg" || "https://cdn.jsdelivr.net/npm/@egovernments/digit-ui-css@1.0.7/img/m_seva_white_logo.png"}
+          src={"https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/MCGLOGO.jpg" || "https://cdn.jsdelivr.net/npm/@egovernments/digit-ui-css@1.0.7/img/m_seva_white_logo.png"}
           alt="mSeva"
           style={{marginLeft:"10px"}}
         />

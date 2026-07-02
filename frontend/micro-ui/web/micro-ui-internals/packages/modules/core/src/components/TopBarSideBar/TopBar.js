@@ -137,7 +137,7 @@ const TopBar = ({
       {mobileView ? <Hamburger handleClick={toggleSidebar} color="#9E9E9E" /> : null}
       {/* <img className="city" /> */}
       {/* <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}> */}
-      <img className="city" src="https://hrupyog-dev-finance.s3.ap-south-1.amazonaws.com/MCG+LOGO.jpg" style={{ height: "30px", width: "auto" }} />
+      <img className="city" src="https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/MCGLOGO.jpg" style={{ height: "30px", width: "auto" }} />
       <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
         {loggedin &&
           (cityDetails?.city?.ulbGrade ? (
