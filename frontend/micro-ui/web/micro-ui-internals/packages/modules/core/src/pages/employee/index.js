@@ -80,9 +80,9 @@ const EmployeeApp = ({
                 </div>
                 </div>
               <picture>
-                <source id="backgroung-login" media="(min-width: 950px)" srcset="https://hrupyog-dev-finance.s3.ap-south-1.amazonaws.com/haryana_banner+(1).png" style={{"position":"absolute","height":"100%","width":"100%"}} />
-                  <source media="(min-width: 250px)" srcset="https://hrupyog-dev-finance.s3.ap-south-1.amazonaws.com/Untitled+design.png" />
-                    <img src="https://hrupyog-dev-finance.s3.ap-south-1.amazonaws.com/haryana_banner+(1).png" alt="imagealttext" style={{"position":"absolute","height":"100%","width":"100%","zIndex":"1","display":window.location.href.includes("user/profile")?"none":""}}/>
+                <source id="backgroung-login" media="(min-width: 950px)" srcset="https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/haryanabanner.png" style={{"position":"absolute","height":"100%","width":"100%"}} />
+                  <source media="(min-width: 250px)" srcset="https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/SBMlogo.png" />
+                    <img src="https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/haryanabanner.png" alt="imagealttext" style={{"position":"absolute","height":"100%","width":"100%","zIndex":"1","display":window.location.href.includes("user/profile")?"none":""}}/>
                     </picture>
               {/* <img class="image" id="main-img" src="https://in-egov-assets.s3.ap-south-1.amazonaws.com/images/employee-login.png" /> */}
               {/* <img class="image" id="main-img" src="https://i.postimg.cc/9Q7jT6Dd/Banner-Image-2.png" /> */}
