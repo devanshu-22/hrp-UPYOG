@@ -10,7 +10,7 @@ const OpenLinkContainer = ({ img,}) => {
           className="city"
           id="topbar-logo" 
           crossOrigin="anonymous"
-          src={"https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/MCGLOGO.jpg"}
+          src={"https://assets-hrdulb.sparrowsoftech.in/hr-dulb-asset/Haryanalogo.jpeg"}
           alt="mSeva"
         />
       </div>
