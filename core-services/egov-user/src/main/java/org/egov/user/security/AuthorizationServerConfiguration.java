@@ -2,26 +2,22 @@ package org.egov.user.security;
 
 import static org.egov.user.config.UserServiceConstants.USER_CLIENT_ID;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.egov.user.security.oauth2.custom.CustomTokenEnhancer;
+import org.egov.user.security.oauth2.custom.CustomTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import redis.clients.jedis.JedisShardInfo;
 
@@ -71,18 +67,24 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		return new JedisConnectionFactory(new JedisShardInfo(host));
 	}
 
-    @Bean
-    public DefaultTokenServices customTokenServices() {
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenEnhancer(customTokenEnhancer);
-        tokenServices.setTokenStore(tokenStore);
-        tokenServices.setSupportRefreshToken(true);
-        tokenServices.setReuseRefreshToken(true);
-        tokenServices.setAuthenticationManager(customAuthenticationManager);
-        tokenServices.setClientDetailsService(clientDetailsService);
-        return tokenServices;
-    }
-	
-	
-	
+	@Bean
+	public RedisTemplate<String, String> redisTemplate(JedisConnectionFactory connectionFactory) {
+		RedisTemplate<String, String> template = new RedisTemplate<>();
+		template.setConnectionFactory(connectionFactory);
+		return template;
+	}
+
+	@Bean
+	public DefaultTokenServices customTokenServices() {
+//        DefaultTokenServices tokenServices = new DefaultTokenServices();
+		CustomTokenService tokenServices = new CustomTokenService();
+		tokenServices.setTokenEnhancer(customTokenEnhancer);
+		tokenServices.setTokenStore(tokenStore);
+		tokenServices.setSupportRefreshToken(true);
+		tokenServices.setReuseRefreshToken(true);
+		tokenServices.setAuthenticationManager(customAuthenticationManager);
+		tokenServices.setClientDetailsService(clientDetailsService);
+		return tokenServices;
+	}
+
 }
