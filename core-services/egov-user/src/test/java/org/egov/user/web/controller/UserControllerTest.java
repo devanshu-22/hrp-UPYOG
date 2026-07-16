@@ -50,8 +50,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+//@WebMvcTest(UserController.class)
 @Import(TestConfiguration.class)
+@WebMvcTest(
+	    controllers = UserController.class,
+	    excludeAutoConfiguration = {
+	        org.egov.encryption.config.EncryptionConfiguration.class
+	    }
+	)
 public class UserControllerTest {
 
     @Autowired
