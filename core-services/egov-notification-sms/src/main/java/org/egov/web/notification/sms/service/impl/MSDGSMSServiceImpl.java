@@ -74,13 +74,13 @@ public class MSDGSMSServiceImpl extends BaseSMSService {
     }
 
     protected void submitToExternalSmsService(Sms sms) {
-        String finalmessage = "";
-        for (int i = 0; i < sms.getMessage().length(); i++) {
-            char ch = sms.getMessage().charAt(i);
-            int j = (int) ch;
-            String sss = "&#" + j + ";";
-            finalmessage = finalmessage + sss;
-        }
+        String finalmessage = sms.getMessage();
+//        for (int i = 0; i < sms.getMessage().length(); i++) {
+//            char ch = sms.getMessage().charAt(i);
+//            int j = (int) ch;
+//            String sss = "&#" + j + ";";
+//            finalmessage = finalmessage + sss;
+//        }
         sms.setMessage(finalmessage);
         String url = smsProperties.getUrl();
         final MultiValueMap<String, String> requestBody = bodyBuilder.getSmsRequestBody(sms);
@@ -102,7 +102,7 @@ public class MSDGSMSServiceImpl extends BaseSMSService {
         String message = requestBody.getFirst(configMap.get(SMSConstants.SENDER_MESSAGE_IDENTIFIER));
         String secureKey = requestBody.getFirst(configMap.get(SMSConstants.SENDER_SECUREKEY_IDENTIFIER));
 
-        String encryptedPwd = MD5(password);
+//      String encryptedPwd = MD5(password);
         String hashMsg = hashGenerator(username, senderid, message, secureKey);
 
         List<String> entriesToBeModified = new ArrayList<>();
@@ -117,7 +117,7 @@ public class MSDGSMSServiceImpl extends BaseSMSService {
             for (String key : entriesToBeModified) {
                 if (key.equals(configMap.get(SMSConstants.SENDER_PASSWORD_IDENTIFIER))) {
                     requestBody.remove(key);
-                    requestBody.add(key, encryptedPwd);
+                    requestBody.add(key, password);
                 } else if (key.equals(configMap.get(SMSConstants.SENDER_SECUREKEY_IDENTIFIER))) {
                     requestBody.remove(key);
                     requestBody.add(key, hashMsg);
