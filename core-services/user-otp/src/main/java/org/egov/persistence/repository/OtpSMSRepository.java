@@ -1,6 +1,10 @@
 package org.egov.persistence.repository;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.lang.String.format;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.domain.model.Category;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.service.LocalizationService;
@@ -8,13 +12,9 @@ import org.egov.persistence.contract.SMSRequest;
 import org.egov.tracer.kafka.CustomKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
-import java.util.Map;
-
-import static java.lang.String.format;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service
@@ -25,8 +25,8 @@ public class OtpSMSRepository {
     private static final String LOCALIZATION_KEY_LOGIN_SMS = "sms.login.otp.msg";
     private static final String LOCALIZATION_KEY_PWD_RESET_SMS = "sms.pwd.reset.otp.msg";
 
-    @Value("${expiry.time.for.otp: 4000}")
-    private long maxExecutionTime=2000L;
+    @Value("${expiry.time.for.otp: 600000}")
+    private long maxExecutionTime;
 
     @Value("${egov.localisation.tenantid.strip.suffix.count}")
     private int tenantIdStripSuffixCount;
@@ -58,13 +58,13 @@ public class OtpSMSRepository {
 
     private String getMessageFormat(OtpRequest otpRequest) {
         String tenantId = getRequiredTenantId(otpRequest.getTenantId());
-        Map<String, String> localisedMsgs = localizationService.getLocalisedMessages(tenantId, "en_IN", "egov-user");
+//        Map<String, String> localisedMsgs = localizationService.getLocalisedMessages(tenantId, "en_IN", "egov-user");
+        Map<String, String> localisedMsgs = new HashMap<>();
         if (localisedMsgs.isEmpty()) {
             log.info("Localization Service didn't return any msgs so using default...");
             localisedMsgs.put(LOCALIZATION_KEY_REGISTER_SMS, "Dear Citizen, Your OTP to complete your mSeva Registration is %s.");
             localisedMsgs.put(LOCALIZATION_KEY_LOGIN_SMS, "Dear Citizen, Your Login OTP is %s.");
-            localisedMsgs.put(LOCALIZATION_KEY_PWD_RESET_SMS, "Dear Citizen, Your OTP for recovering password is %s.");
-        }
+            localisedMsgs.put(LOCALIZATION_KEY_PWD_RESET_SMS, "Dear User, Your OTP for password reset in the UPYOG Application is %s.This OTP is valid for 10 minutes. Do not share it with anyone. Regards, DULB Haryana");        }
         String message = null;
 
         if (otpRequest.isRegistrationRequestType())

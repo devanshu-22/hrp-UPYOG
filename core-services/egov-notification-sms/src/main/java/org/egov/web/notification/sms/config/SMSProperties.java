@@ -86,6 +86,9 @@ public class SMSProperties {
 
     @Value("${sms.enabled:false}")
     private boolean smsEnabled;
+    
+    @Value("${sms.service.type}")
+    private String smsServiceType;
 
     @Setter(AccessLevel.PROTECTED) private List<Pattern> whitelistPatterns;
     @Setter(AccessLevel.PROTECTED) private List<Pattern> blacklistPatterns;

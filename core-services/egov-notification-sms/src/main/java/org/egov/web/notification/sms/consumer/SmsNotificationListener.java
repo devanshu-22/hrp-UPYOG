@@ -62,6 +62,7 @@ public class SmsNotificationListener {
             topics = "${kafka.topics.notification.sms.name}"
     )
     public void process(HashMap<String, Object> consumerRecord) {
+    	log.info("....................SMS Service started...........................");
         RequestContext.setId(UUID.randomUUID().toString());
         SMSRequest request = null;
         try {
