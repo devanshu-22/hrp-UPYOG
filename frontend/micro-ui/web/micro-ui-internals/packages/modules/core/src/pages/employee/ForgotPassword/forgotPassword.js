@@ -36,7 +36,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
     const requestData = {
       otp: {
         mobileNumber: data.mobileNumber,
-        userType: "citizen",
+        userType: "EMPLOYEE",
         type: "passwordreset",
         tenantId: data.city.code,
       },
