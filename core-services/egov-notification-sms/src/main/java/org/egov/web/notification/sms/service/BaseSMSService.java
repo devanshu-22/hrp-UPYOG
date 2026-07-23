@@ -122,10 +122,10 @@ abstract public class BaseSMSService implements SMSService, SMSBodyBuilder {
 
             }
         }
-        boolean status = responseString.contains("API000");
+        boolean status = responseString.contains("402");
 
         if(!status) {
-            log.error("error response from third party api: info:"+responseMap.get("info"));
+            log.error("Error response from third party api: info:"+responseMap.get("info"));
             throw new RuntimeException(responseMap.get("info"));
         }
 
@@ -158,10 +158,10 @@ abstract public class BaseSMSService implements SMSService, SMSBodyBuilder {
             if (value.startsWith("$")) {
                 switch (value) {
                     case "$username":
-                        map.add(key, /*smsProperties.getUsername()*/"pbdwss.sms");
+                        map.add(key, smsProperties.getUsername());
                         break;
                     case "$password":
-                        map.add(key, /*smsProperties.getPassword()*/"Nkyf%403254");
+                        map.add(key, smsProperties.getPassword());
                         break;
                     case "$senderid":
                         map.add(key, smsProperties.getSenderid());
@@ -172,6 +172,16 @@ abstract public class BaseSMSService implements SMSService, SMSBodyBuilder {
                     case "$message":
                         map.add(key, sms.getMessage());
                         break;
+                    case "$templateid":
+                        map.add(key, smsProperties.getSmsDefaultTmplid());
+                        break;
+                    case "$smsservicetype":
+                        map.add(key, smsProperties.getSmsServiceType());
+                        break;
+                    case "$securekey":
+                        map.add(key, smsProperties.getSecureKey());
+                        break;
+      
                     default:
                         if (env.containsProperty(value.substring(1))) {
                             map.add(key, env.getProperty(value.substring(1)));
