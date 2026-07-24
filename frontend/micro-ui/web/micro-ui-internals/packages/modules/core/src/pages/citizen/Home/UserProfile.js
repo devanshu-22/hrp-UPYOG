@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import { subYears, format, differenceInYears } from "date-fns";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -51,7 +52,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [userDetails, setUserDetails] = useState(null);
   const [name, setName] = useState(userInfo?.name ? userInfo.name : "");
   const dateOfBirth= userDetails?.dob
-  console.log("ddd", dateOfBirth)
+  //console.log("ddd", dateOfBirth)
   const formattedDob=(dateOfBirth!==undefined) ?format(new Date(dateOfBirth), 'MM/dd/yyyy') : ""
   //const dateOfBirth1= (dateOfBirth!==undefined) ?dateOfBirth.split("-").reverse().join("-") : ""
   const [dob, setDob] = useState(dateOfBirth);
@@ -70,7 +71,11 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [loading, setLoading] = useState(false);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const [errors, setErrors] = React.useState({});
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const PASSWORD_REGEX =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%!&*])[A-Za-z\d@#$%!&*]{8,15}$/;
   
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
@@ -168,7 +173,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserNewPassword = (value) => {
     setNewPassword(value);
 
-    if (!new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(value)) {
+    if (!PASSWORD_REGEX.test(value)) {
       setErrors(prev => ({ ...prev, newPassword: { type: "pattern", message: t("CORE_COMMON_PROFILE_PASSWORD_INVALID") } }))
     } else if (currentPassword && value === currentPassword) {
       setErrors(prev => ({ ...prev, newPassword: { type: "sameAsCurrent", message: t("CORE_COMMON_PROFILE_SAME_PASSWORD_ERROR") || "New password must be different from current password" } }));
@@ -180,7 +185,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserConfirmPassword = (value) => {
     setConfirmPassword(value);
 
-    if (!new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(value)) {
+    if (!PASSWORD_REGEX.test(value)) {
       setErrors(prev => ({ ...prev, confirmPassword: { type: "pattern", message: t("CORE_COMMON_PROFILE_PASSWORD_INVALID") } }))
     } else if (newPassword && value !== newPassword) {
       setErrors(prev => ({ ...prev, confirmPassword: { type: "mismatch", message: t("CORE_COMMON_PROFILE_PASSWORD_MISMATCH") || "Passwords do not match" } }));
@@ -239,7 +244,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           throw JSON.stringify({ type: "error", message: t("CORE_COMMON_PROFILE_PASSWORD_MISMATCH") });
         }
 
-        if (!new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(newPassword) && !new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(confirmPassword)) {
+        if (!PASSWORD_REGEX.test(newPassword) && !PASSWORD_REGEX.test(confirmPassword)) {
           throw JSON.stringify({ type: "error", message: t("CORE_COMMON_PROFILE_PASSWORD_INVALID") });
         }
       }
@@ -626,20 +631,62 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                   </a>
                   {changepassword ? (
                     <div style={{ marginTop: "10px" }}>
+                      <div
+                        style={{
+                          background: "#F5F5F5",
+                          border: "1px solid rgb(168, 34, 39)",
+                          padding: "12px",
+                          borderRadius: "4px",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <strong style={{ color: "rgb(168, 34, 39)" }}>
+                          Password Requirements
+                        </strong>
+
+                        <ul
+                          style={{
+                            marginTop: "8px",
+                            paddingLeft: "18px",
+                            color: "rgb(168, 34, 39)",
+                          }}
+                        >
+                          <li>- 8–15 characters</li>
+                          <li>- At least one uppercase letter (A-Z)</li>
+                          <li>- At least one lowercase letter (a-z)</li>
+                          <li>- At least one number (0-9)</li>
+                          <li>- At least one special character (@ # $ % ! & *)</li>
+                          <li>- New password must be different from current password</li>
+                        </ul>
+                      </div>
                       <LabelFieldPair style={{ display: "flex" }}>
                         <CardLabel  className="profile-label-margin" style={editScreen ? { color: "#B1B4B6", width: "300px" } : { width: "300px" }}>{`${t(
                           "CORE_COMMON_PROFILE_CURRENT_PASSWORD"
                         )}`}</CardLabel>
-                        <div style={{width: "100%"}}>
-                          <TextInput
-                            t={t}
-                            type={"password"}
-                            isMandatory={false}
-                            name="name"
-                            pattern="^([a-zA-Z0-9@#$%])+$"
-                            onChange={(e) => setUserCurrentPassword(e.target.value)}
-                            disable={editScreen}
-                          />
+                      <div style={{ position: "relative", width: "100%" }}>
+                        <TextInput
+                          t={t}
+                          type={showCurrentPassword ? "text" : "password"}
+                          isMandatory={false}
+                          name="currentPassword"
+                          onChange={(e) => setUserCurrentPassword(e.target.value)}
+                          disable={editScreen}
+                          style={{ width: "100%", paddingRight: "40px" }}
+                        />
+
+                        <span
+                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                          style={{
+                            position: "absolute",
+                            right: "12px",
+                            top: "40%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                            color: "#666"
+                          }}
+                        >
+                          {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+                        </span>
                           {errors?.currentPassword && <CardLabelError>{errors?.currentPassword?.message}</CardLabelError>}
                         </div>
                       </LabelFieldPair>
@@ -648,16 +695,29 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                         <CardLabel  className="profile-label-margin" style={editScreen ? { color: "#B1B4B6", width: "300px" } : { width: "300px" }}>{`${t(
                           "CORE_COMMON_PROFILE_NEW_PASSWORD"
                         )}`}</CardLabel>
-                        <div style={{width: "100%"}}>
+                        <div style={{ position: "relative", width: "100%" }}>
                           <TextInput
                             t={t}
-                            type={"password"}
+                            type={showNewPassword ? "text" : "password"}
                             isMandatory={false}
-                            name="name"
-                            pattern="^([a-zA-Z0-9@#$%])+$"
+                            name="newPassword"
                             onChange={(e) => setUserNewPassword(e.target.value)}
                             disable={editScreen}
+                            style={{ width: "100%", paddingRight: "40px" }}
                           />
+
+                          <span
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            style={{
+                              position: "absolute",
+                              right: "12px",
+                              top: "35%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer"
+                            }}
+                          >
+                            {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                          </span>
                           {errors?.newPassword && <CardLabelError>{errors?.newPassword?.message}</CardLabelError>}
                       </div>
                       </LabelFieldPair>
@@ -666,16 +726,29 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                         <CardLabel  className="profile-label-margin" style={editScreen ? { color: "#B1B4B6", width: "300px" } : { width: "300px" }}>{`${t(
                           "CORE_COMMON_PROFILE_CONFIRM_PASSWORD"
                         )}`}</CardLabel>
-                        <div style={{width: "100%"}}>
+                        <div style={{ position: "relative", width: "100%" }}>
                           <TextInput
                             t={t}
-                            type={"password"}
+                            type={showConfirmPassword ? "text" : "password"}
                             isMandatory={false}
-                            name="name"
-                            pattern="^([a-zA-Z0-9@#$%])+$"
+                            name="confirmPassword"
                             onChange={(e) => setUserConfirmPassword(e.target.value)}
                             disable={editScreen}
+                            style={{ width: "100%", paddingRight: "40px" }}
                           />
+
+                          <span
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            style={{
+                              position: "absolute",
+                              right: "12px",
+                              top: "35%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer"
+                            }}
+                          >
+                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                          </span>
                           {errors?.confirmPassword && <CardLabelError>{errors?.confirmPassword?.message}</CardLabelError>}
                         </div>
                       </LabelFieldPair>
