@@ -149,7 +149,7 @@ public class VoucherServiceImpl implements VoucherService {
 	@Override
 	public VoucherResponse createVoucher(List<Voucher> vouchers, RequestInfo requestInfo, String tenantId) throws VoucherCustomException{
 		final StringBuilder voucher_create_url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId)
-				+ propertiesManager.getVoucherCreateUrl());
+				+ propertiesManager.getVoucherCreateUrl()).append("?tenantId=").append(tenantId);
 		VoucherRequest voucherRequest = new VoucherRequest();
 		voucherRequest.setVouchers(vouchers);
 		voucherRequest.setRequestInfo(requestInfo);
@@ -240,7 +240,8 @@ public class VoucherServiceImpl implements VoucherService {
 		voucher.setName(businessServiceName);
 		voucher.setType(RECEIPTS_VOUCHER_TYPE);
 		voucher.setFund(new Fund());
-		voucher.getFund().setCode(businessService.getFund());
+//		voucher.getFund().setCode(businessService.getFund());
+		voucher.getFund().setCode("00002");
 		voucher.setFunction(new Function());
 		voucher.getFunction().setCode(businessService.getFunction());
 		voucher.setDepartment(businessService.getDepartment());
@@ -484,7 +485,7 @@ public class VoucherServiceImpl implements VoucherService {
 //		requestInfo.setAuthToken(propertiesManager.getSiAuthToken());
 		VoucherRequest request = new VoucherRequest(tenantId, requestInfo, null);
 		StringBuilder url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId) 
-				+ propertiesManager.getModuleIdSearchUrl() + "?moduleName=" + moduleName);
+				+ propertiesManager.getModuleIdSearchUrl() + "?moduleName=" + moduleName+"?tenantId="+tenantId);
 		try {
 			return mapper.convertValue(serviceRequestRepository.fetchResult(url, request, tenantId), EgModules.class);
 		} catch (Exception e) {
@@ -531,7 +532,9 @@ public class VoucherServiceImpl implements VoucherService {
 		if(referenceDoc != null & !referenceDoc.isEmpty()){
 			url.append("&referencedocument=").append(URLEncoder.encode(referenceDoc,"UTF-8"));
 		}
-				
+		
+		url.append("&tenantId=").append(URLEncoder.encode(tenantId,"UTF-8"));
+		
 		try {
 			return mapper.convertValue(serviceRequestRepository.fetchResult(url, request, tenantId), VoucherResponse.class);
 		} catch (Exception e) {
